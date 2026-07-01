@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal exam marks tracker — Terms, Grand Tests, Slip Tests.">
+    <title>marks. — exam tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body data-theme="dark">
+    <div class="bg-gradient"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="dots-pattern dots-1"></div>
+    <div class="dots-pattern dots-2"></div>
+
+    <!-- Navbar -->
+    <nav class="topbar" id="topbar">
+        <div class="topbar-inner">
+            <a href="#" class="brand">
+                <span class="brand-mark">m.</span>
+                <span class="brand-word">marks</span>
+            </a>
+            <div class="topbar-right">
+                <div class="avg-chip" title="Overall Average">
+                    <span class="avg-label">avg</span>
+                    <span class="avg-value" id="overallAvg">—</span>
+                </div>
+                <div class="user-chip">
+                    <span class="user-avatar" id="userAvatar"></span>
+                    <span class="user-name" id="userName"></span>
+                </div>
+                
+                <div class="topbar-divider"></div>
+
+                <button class="icon-btn theme-btn" id="themeToggleBtn" title="Toggle Theme">
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <button class="icon-btn download-btn" id="exportBtn" title="Download Report Card">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <button class="icon-btn clear-btn" id="resetAllBtn" title="Clear all marks">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                </button>
+                <button class="icon-btn logout-btn" id="logoutBtn" title="Log out">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-badge">📊 personal dashboard</div>
+            <h1 class="hero-title">
+                Hello, <span class="hero-name" id="heroName"></span>.<br>
+                <span class="hero-gradient">Track Your Scores.</span>
+            </h1>
+            <p class="hero-desc">Enter your marks below. Totals, percentages and averages are calculated in real-time.</p>
+            <div class="hero-pills" id="heroPills"></div>
+        </section>
+
+        <!-- Tabs -->
+        <div class="tab-bar" id="tabBar">
+            <button class="tab active" data-tab="terms">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Terms
+            </button>
+            <button class="tab" data-tab="grand">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Grand Tests
+            </button>
+            <button class="tab" data-tab="slip">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Slip Tests
+            </button>
+        </div>
+
+        <!-- Tab Content: Terms -->
+        <section class="tab-content active" id="tabTerms">
+            <div class="cards-grid" id="termsGrid"></div>
+        </section>
+
+        <!-- Tab Content: Grand Tests -->
+        <section class="tab-content" id="tabGrand">
+            <div class="cards-grid" id="grandGrid"></div>
+        </section>
+
+        <!-- Tab Content: Slip Tests -->
+        <section class="tab-content" id="tabSlip">
+            <div class="slip-header">
+                <div>
+                    <div class="slip-info">Maths, Physics, Chemistry — 20 marks each</div>
+                </div>
+                <button class="add-week-btn" id="addWeekBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Week
+                </button>
+            </div>
+            <div class="cards-grid slip-grid" id="slipGrid"></div>
+            <div class="slip-empty" id="slipEmpty">
+                <p>No slip tests yet.</p>
+                <p class="slip-empty-sub">Click "Add Week" to get started.</p>
+            </div>
+        </section>
+
+        <!-- Analytics & Summary -->
+        <section class="summary-section reveal" id="summarySection">
+            <div class="summary-header">
+                <div class="summary-header-left">
+                    <span class="section-tag">📈 analytics</span>
+                    <h2 class="section-heading">Insights & Trends</h2>
+                </div>
+                <div class="goal-widget">
+                    <label for="goalInput" class="goal-label">Target Goal:</label>
+                    <div class="goal-input-wrapper">
+                        <input type="number" id="goalInput" class="goal-input" placeholder="90" min="0" max="100">
+                        <span class="goal-pct-sign">%</span>
+                    </div>
+                    <div class="goal-status" id="goalStatus">Enter goal to track</div>
+                </div>
+            </div>
+
+            <!-- Trend Graph -->
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <div class="summary-grid" id="summaryGrid"></div>
+        </section>
+    </main>
+
+    <!-- Add Subject Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Subject</h3>
+                <button class="modal-close" id="modalClose" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="addSubjectForm" autocomplete="off">
+                <div class="modal-field">
+                    <label class="modal-label" for="subjectNameInput">Subject Name</label>
+                    <input class="modal-input" type="text" id="subjectNameInput" placeholder="e.g. English" required>
+                </div>
+                <div class="modal-field">
+                    <label class="modal-label" for="subjectMaxInput">Maximum Marks</label>
+                    <input class="modal-input" type="number" id="subjectMaxInput" placeholder="e.g. 100" min="1" max="500" value="100" required>
+                </div>
+                <div class="modal-error" id="modalError"></div>
+                <button type="submit" class="modal-submit">Add Subject</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <span>built for personal use</span>
+        <span class="footer-dot"></span>
+        <span>2026</span>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

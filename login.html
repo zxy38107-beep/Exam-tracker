@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to your marks tracker.">
+    <title>marks. — sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .login-wrap {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 440px;
+            padding: 24px;
+        }
+
+        .login-card {
+            border-radius: 28px;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 44px 38px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(28px) scale(0.97);
+            animation: loginIn 0.7s cubic-bezier(.16,1,.3,1) 0.15s forwards;
+        }
+
+        @keyframes loginIn {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .login-brand {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .login-brand-m {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-brand-w {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.45);
+        }
+
+        .login-subtitle {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* Tabs */
+        .login-tabs {
+            display: flex;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 100px;
+            padding: 4px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 100px;
+            background: transparent;
+            color: rgba(255,255,255,0.35);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-tab.active {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .login-tab:hover:not(.active) { color: rgba(255,255,255,0.55); }
+
+        /* Forms */
+        .login-form {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-form.active {
+            display: flex;
+            animation: formSlide 0.3s cubic-bezier(.16,1,.3,1);
+        }
+
+        @keyframes formSlide {
+            from { opacity: 0; transform: translateX(12px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .lf-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .lf-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.45);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lf-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 18px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .lf-input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+
+        .lf-input:focus {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.07);
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.04);
+        }
+
+        .login-submit {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #1a1a2e;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(67, 233, 123, 0.2);
+        }
+
+        .login-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(67, 233, 123, 0.3);
+        }
+
+        .login-submit:active { transform: scale(0.98); }
+
+        /* Error */
+        .login-error {
+            display: none;
+            padding: 11px 16px;
+            border-radius: 12px;
+            background: rgba(255,82,82,0.1);
+            border: 1px solid rgba(255,82,82,0.15);
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .login-error.show {
+            display: block;
+            animation: errIn 0.3s ease;
+        }
+
+        @keyframes errIn {
+            from { opacity: 0; transform: scale(0.95); }
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-footer-dot {
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 32px 24px; border-radius: 22px; }
+            .login-wrap { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="dots-pattern dots-1"></div>
+    <div class="dots-pattern dots-2"></div>
+
+    <div class="login-wrap">
+        <div class="login-card">
+            <div class="login-brand">
+                <span class="login-brand-m">m.</span>
+                <span class="login-brand-w">marks</span>
+            </div>
+            <p class="login-subtitle">Sign in to track your exam scores</p>
+
+            <div class="login-tabs">
+                <button class="login-tab active" data-tab="login" id="tabLogin">Sign In</button>
+                <button class="login-tab" data-tab="signup" id="tabSignup">Create Account</button>
+            </div>
+
+            <div class="login-error" id="authError"></div>
+
+            <form class="login-form active" id="loginForm" autocomplete="off">
+                <div class="lf-group">
+                    <label class="lf-label" for="loginUser">Username</label>
+                    <input class="lf-input" type="text" id="loginUser" placeholder="enter your username" required>
+                </div>
+                <div class="lf-group">
+                    <label class="lf-label" for="loginPass">Password</label>
+                    <input class="lf-input" type="password" id="loginPass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-submit">Sign In →</button>
+            </form>
+
+            <form class="login-form" id="signupForm" autocomplete="off">
+                <div class="lf-group">
+                    <label class="lf-label" for="signupName">Your Name</label>
+                    <input class="lf-input" type="text" id="signupName" placeholder="e.g. Rahul" required>
+                </div>
+                <div class="lf-group">
+                    <label class="lf-label" for="signupUser">Username</label>
+                    <input class="lf-input" type="text" id="signupUser" placeholder="pick a username" required>
+                </div>
+                <div class="lf-group">
+                    <label class="lf-label" for="signupPass">Password</label>
+                    <input class="lf-input" type="password" id="signupPass" placeholder="at least 4 characters" required>
+                </div>
+                <button type="submit" class="login-submit">Create Account →</button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <span>built for personal use</span>
+            <span class="login-footer-dot"></span>
+            <span>2026</span>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        AUTH.redirectIfLoggedIn();
+        document.body.classList.add('loaded');
+
+        const tabs = document.querySelectorAll('.login-tab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const errorEl = document.getElementById('authError');
+
+        function hideError() { errorEl.classList.remove('show'); errorEl.textContent = ''; }
+        function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('show'); }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                hideError();
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (tab.dataset.tab === 'login') {
+                    loginForm.classList.add('active');
+                    signupForm.classList.remove('active');
+                } else {
+                    signupForm.classList.add('active');
+                    loginForm.classList.remove('active');
+                }
+            });
+        });
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault(); hideError();
+            const result = AUTH.login(document.getElementById('loginUser').value, document.getElementById('loginPass').value);
+            result.ok ? (window.location.href = 'index.html') : showError(result.error);
+        });
+
+        signupForm.addEventListener('submit', e => {
+            e.preventDefault(); hideError();
+            const result = AUTH.signup(
+                document.getElementById('signupName').value,
+                document.getElementById('signupUser').value,
+                document.getElementById('signupPass').value
+            );
+            result.ok ? (window.location.href = 'index.html') : showError(result.error);
+        });
+
+        document.getElementById('loginUser').focus();
+    </script>
+</body>
+</html>
