@@ -63,14 +63,14 @@ const AUTH = {
 
     // Log out
     logout() {
-        sessionStorage.removeItem(this.SESSION_KEY);
+        localStorage.removeItem(this.SESSION_KEY);
         window.location.href = 'login.html';
     },
 
     // Get current session — returns { username, name } or null
     getSession() {
         try {
-            const s = JSON.parse(sessionStorage.getItem(this.SESSION_KEY));
+            const s = JSON.parse(localStorage.getItem(this.SESSION_KEY));
             if (s && s.username && s.name) return s;
         } catch {}
         return null;
@@ -99,7 +99,7 @@ const AUTH = {
 
     // --- Internal ---
     _setSession(username, name) {
-        sessionStorage.setItem(this.SESSION_KEY, JSON.stringify({ username, name }));
+        localStorage.setItem(this.SESSION_KEY, JSON.stringify({ username, name }));
     },
 
     // Simple hash (not cryptographic — fine for localStorage demo)
